@@ -17,13 +17,12 @@
     <!-- Main container for the weather application -->
     <div class="main_container">
       <div class="form">
-        <!-- Input field for the user to enter the city name -->
         <input type="text" id="cityName" placeholder="Enter your city name" />
-        <!-- Button to trigger the weather check -->
         <button id="btn">Check</button>
+        <button id="currentLocationBtn"><i class="fas fa-map-marker-alt"></i></button>
       </div>
-
-      <!-- Container for displaying weather information -->
+      <p class="rs">Recently Searched : </p>
+      <select id="recentCities" style="display: none"></select>
       <div class="container"></div>
     </div>
 

@@ -1,22 +1,45 @@
 let btn = document.getElementById("btn");
+let currentLocationBtn = document.getElementById("currentLocationBtn");
 let container = document.querySelector(".container");
+let recentCitiesDropdown = document.getElementById("recentCities");
+
+// Load recent cities from local storage
+loadRecentCities();
 
 btn.addEventListener("click", () => {
-  // Corrected to use 'value' to get the input value
-  let cityName = document.getElementById("cityName").value;
+  let cityName = document.getElementById("cityName").value.trim();
   if (cityName.length <= 0) {
-    container.innerHTML = `<h1 class='error'>Please Enter City Name</h1>`;
-    setTimeout(() => {
-      container.innerHTML = "";
-    }, 1000);
+    showError("Please Enter City Name");
     return;
   }
+  fetchWeatherData(cityName);
+});
 
-  // API key
+currentLocationBtn.addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+      fetchWeatherDataByLocation(lat, lon);
+    }, () => {
+      showError("Unable to retrieve your location.");
+    });
+  } else {
+    showError("Geolocation is not supported by this browser.");
+  }
+});
+
+recentCitiesDropdown.addEventListener("change", (event) => {
+  let selectedCity = event.target.value;
+  if (selectedCity) {
+    fetchWeatherData(selectedCity);
+  }
+});
+
+function fetchWeatherData(cityName) {
   let apiKey = "a5667f98d71a05fedcdf4cd7a639139a";
   let api = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
 
-  // Fetch the API
   fetch(api)
     .then((resp) => {
       if (!resp.ok) {
@@ -24,45 +47,51 @@ btn.addEventListener("click", () => {
       }
       return resp.json();
     })
-    .then((data) => ShowData(data))
+    .then((data) => {
+      showData(data);
+      saveRecentCity(cityName);
+    })
     .catch(() => {
-      container.innerHTML = `<h1 class='error'>Please Enter Correct City Name</h1>`;
-      setTimeout(() => {
-        container.innerHTML = "";
-      }, 1000);
+      showError("Please Enter Correct City Name");
     });
-});
+}
 
-// Show the result
-let ShowData = (data) => {
+function fetchWeatherDataByLocation(lat, lon) {
+  let apiKey = "a5667f98d71a05fedcdf4cd7a639139a";
+  let api = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+  fetch(api)
+    .then((resp) => {
+      if (!resp.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return resp.json();
+    })
+    .then((data) => {
+      showData(data);
+      saveRecentCity(data.name);
+    })
+    .catch(() => {
+      showError("Unable to fetch weather data for your location.");
+    });
+}
+
+function showData(data) {
   const WeatherImages = {
     Clear: "Sun.jpeg",
     Clouds: "Clouds.jpg",
     Haze: "Haze.jpeg",
     Rain: "Rain.jpg",
-    Snow: "snow.jpg",
+    Snow: "Snow.jpg",
   };
-  //   if (data.weather[0].main === "Clear") {
-  //     images = "sun";
-  //   } else if (data.weather[0].main === "Clouds") {
-  //     images = "Clouds";
-  //   } else if (data.weather[0].main === "Haze") {
-  //     images = "Haze";
-  //   }else if (data.weather[0].main === "Rain") {
-  //     images = "Rain";
-  //   }else if (data.weather[0].main === "Snow") {
-  //     images = "Snow";
-  //   }
 
   let weatherCondition = data.weather[0].main; 
   let imageFile = WeatherImages[weatherCondition];
 
   container.innerHTML = `
     <div class="weatherContainer">
-      <img src="Images/${imageFile}" alt="Weather Icon" id="img" />
-      <div id="weatherName">${Math.floor(data.main.temp - 273.15)}°C, ${
-    data.weather[0].main
-  }</div>
+      <img src="images/${imageFile}" alt="Weather Icon" id="img" />
+      <div id="weatherName">${Math.floor(data.main.temp - 273.15)}°C, ${data.weather[0].main}</div>
     </div>
     <div class="cityName">${data.name}</div>
     <div class="otherInfo">
@@ -70,7 +99,7 @@ let ShowData = (data) => {
         <i class="fas fa-water"></i>
         <div class="text">
           <p>${data.main.humidity}%</p>
-          <p>humidity</p>
+          <p>Humidity</p>
         </div>
       </div>
       <div class="horiCenter">
@@ -85,4 +114,36 @@ let ShowData = (data) => {
         ${data.sys.country}
       </div>
     </div>`;
-};
+}
+
+function showError(message) {
+  container.innerHTML = `<h1 class='error'>${message}</h1>`;
+  setTimeout(() => {
+    container.innerHTML = "";
+  }, 1000);
+}
+
+function saveRecentCity(cityName) {
+  let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
+  if (!recentCities.includes(cityName)) {
+    recentCities.push(cityName);
+    localStorage.setItem("recentCities", JSON.stringify(recentCities));
+    loadRecentCities();
+  }
+}
+
+function loadRecentCities() {
+  let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
+  recentCitiesDropdown.innerHTML = "";
+ if (recentCities.length > 0) {
+    recentCitiesDropdown.style.display = "block";
+    recentCities.forEach(city => {
+      let option = document.createElement("option");
+      option.value = city;
+      option.textContent = city;
+      recentCitiesDropdown.appendChild(option);
+    });
+  } else {
+    recentCitiesDropdown.style.display = "none";
+  }
+}
