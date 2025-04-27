@@ -1,62 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Title of the webpage -->
+    <title>Weather Forecast</title>
+    <!-- Link to external CSS stylesheet for styling -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Link to Font Awesome for icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1 class="heading">Weather Forecast</h1>
-    <div class="container">
-        <div class="search-box">
-            <i class='bx bxs-map'></i>
-            <input id = "search-btn" type="text" placeholder="Enter Your Location">
-            <button class="bx bx-search"></button>
-        </div>
-        <div class="weather-box">
-            <div class="box">
-                <div class="info-weather">
-                    <div class="weather">
-                        <img src="https://img.freepik.com/premium-vector/blue-sky-sun-white-clouds_53562-1089.jpg?ga=GA1.1.1863082452.1745644999&semt=ais_hybrid&w=740"></img>
-                        <p class="temperature"> 0 <span>°C</span></p>
-                        <p class="description">Broken clouds</p>
-                    </div>
+    <!-- Main container for the weather application -->
+    <div class="main_container">
+      <div class="form">
+        <!-- Input field for the user to enter the city name -->
+        <input type="text" id="cityName" placeholder="Enter your city name" />
+        <!-- Button to trigger the weather check -->
+        <button id="btn">Check</button>
+      </div>
 
-                </div>
-            </div>
+      <!-- Container for displaying weather information -->
+      <div class="container">
+        <div class="weatherContainer">
+          <!-- Image representing the weather (sun) -->
+          <img
+            src="https://images.unsplash.com/photo-1705077988137-1ba1c119bb0a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3VuJTIwaWNvbnxlbnwwfHwwfHx8MA%3D%3D"
+            alt="Weather Icon"
+            id="img"
+          />
+          <!-- Text displaying the current temperature and weather condition -->
+          <div id="weatherName">38°C, clear</div>
         </div>
-
-        <div class="weather-details">
-            <div class="humidity">
-                <i class="bx bx-water"></i>
-                <div class="text">
-                    <div class="info-humidity">
-                        <span>0%</span>
-                    </div>
-                    <p>Humidity</p>
-                </div>
+        <!-- Text displaying the name of the city -->
+        <div class="cityName">Delhi</div>
+        <div class="otherInfo">
+          <!-- Container for additional weather information -->
+          <div class="horiCenter">
+            <!-- Icon representing humidity -->
+            <i class="fas fa-water"></i>
+            <div class="text">
+              <p>35%</p>
+              <p>humidity</p>
             </div>
-            <div class="wind">
-                <i class="bx bx-wind"></i>
-                <div class="text">
-                    <div class="info-wind">
-                        <span>0Km/h</span>
-                    </div>
-                    <p>Wind Speed</p>
-                </div>
+          </div>
+          <div class="horiCenter">
+            <!-- Icon representing wind speed -->
+            <i class="fas fa-cloud"></i>
+            <div class="text">
+              <p>3.5km/h</p>
+              <p>wind speed</p>
             </div>
-            
+          </div>
+          <div class="horiCenter">
+            <!-- Icon representing location -->
+            <i class="fas fa-map-marker-alt"></i>
+            IN
+          </div>
         </div>
-        <div class="not-found">
-            <div class="box">
-                <img src="https://img.freepik.com/free-vector/oops-404-error-with-broken-robot-concept-illustration_114360-1932.jpg?semt=ais_hybrid&w=740">
-                <p> Location not found !!</p>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <!-- Link to external JavaScript file for functionality -->
     <script src="script.js"></script>
   </body>
 </html>
